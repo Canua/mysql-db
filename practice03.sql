@@ -112,6 +112,17 @@ select b.title as '직책', avg(a.salary) as '평균 연봉', count(b.title) as 
     group by b.title
     having count(b.title)> 100;
     
+select c.title, avg(b.salary), count(*) as cnt
+	from employees a, salaries b, titles c
+    where a.emp_no = b.emp_no
+    and a.emp_no = c.emp_no
+    and b.to_date = '9999-01-01'
+    and c.to_date = '9999-01-01'
+    group by c.title
+    having cnt > 100;
+    
+
+
 -- 6
 select c.dept_name as '부서', avg(d.salary) as 'Enginner 평균 급여'
 	from titles a, dept_emp b, departments c, salaries d
@@ -123,10 +134,67 @@ select c.dept_name as '부서', avg(d.salary) as 'Enginner 평균 급여'
     and a.title = 'Engineer'
 	group by c.dept_name;
 
+
+    
 -- 7 
-select a.title as '직책', sum(b.salary)
-	from titles a, salaries b
-    where a.emp_no = b.emp_no
+select a.title as '직책', sum(b.salary) as '2,000000000 이상의 급여총합'
+	from titles a, salaries b, employees c
+    where c.emp_no = a.emp_no
+    and c.emp_no = b.emp_no
+    and a.to_date = '9999-01-01'
+    and b.to_date = '9999-01-01'
     group by a.title
     having a.title <> 'Engineer'
-	and sum(b.salary) > 2000000000;
+	and sum(b.salary) > 2000000000
+    order by sum(b.salary) desc;
+    
+    
+    
+--
+-- 다중행
+
+-- any
+-- =any(in 완전동일), >any, <any, <>any, <=any, >=any
+-- all
+-- =all(in 완전동일), >all, <all, <>all, <=all, >=all
+
+-- ex)
+SELECT 
+    emp_no
+FROM
+    salaries
+WHERE
+    to_date = '9999-01-01'
+        AND salary > 50000;
+
+-- in , any 사용한 WHERE 절의 서브 쿼리 생성
+SELECT 
+    CONCAT(a.first_name, ' ', a.last_name) AS '이름', b.salary
+FROM
+    employees a,
+    salaries b
+WHERE
+    a.emp_no = b.emp_no
+        AND b.to_date = '9999-01-01'
+        AND (a.emp_no, b.salary) in (SELECT 
+            emp_no, salary
+        FROM
+            salaries
+        WHERE
+            to_date = '9999-01-01'
+                AND salary > 50000);
+                
+                
+-- FROM 절에 서브 쿼리 생성
+select CONCAT(a.first_name, ' ', a.last_name), b.salary
+	from employees a,
+    (SELECT emp_no, salary
+	FROM salaries
+	WHERE to_date = '9999-01-01'
+	AND salary > 50000) b
+    where a.emp_no = b.emp_no;
+    
+    
+    
+    
+    

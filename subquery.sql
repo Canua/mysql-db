@@ -1,7 +1,8 @@
 
 -- subquery
 
-    
+-- 수식 <, >, =, !=, <=, >=
+-- Fai Bale이 근문하는 부서에서 근무하는 직원의 사번, 전체 이름을 출력하시오
 select a.emp_no , a.first_name, b.dept_no
 	from employees a, dept_emp b
     where a.emp_no = b.emp_no
@@ -24,19 +25,11 @@ select a.first_name, b.salary
 order by b.salary desc;
 
 -- ex2) 현재 가장 적은 평균 급여를 받고 있는 직책에 대한 평균 급여
-select title, avg(a.salary) as avg_salary
-			  from salaries a , titles b
-			  where a.emp_no = b.emp_no
-			  and a.to_date = '9999-01-01'
-			  and b.to_date = '9999-01-01'
-			  group by title;
-
-
-
 select min(avg_salary)
 		from(select title, round(avg(a.salary)) as avg_salary
-			  from salaries a , titles b
-			  where a.emp_no = b.emp_no
+			  from salaries a , titles b, employees c
+			  where c.emp_no = a.emp_no 
+              and c.emp_no = b.emp_no
 			  and a.to_date = '9999-01-01'
 			  and b.to_date = '9999-01-01'
 			  group by title) a;
@@ -57,3 +50,7 @@ select title, avg(a.salary) as avg_salary
 			  and a.to_date = '9999-01-01'
 			  and b.to_date = '9999-01-01'
 			  group by title) a);
+              
+              
+              
+
