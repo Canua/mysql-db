@@ -62,3 +62,7 @@ select a.emp_no as '사번', concat(a.first_name, ' ', a.last_name) as '이름',
      order by concat(a.first_name, ' ', a.last_name) asc;
     
 
+select emp_no, first_name, last_name , hire_date from employees;
+
+
+select emp_no, concat(first_name, ' ' ,last_name) hire_date from employees where  concat(first_name, ' ' ,last_name) like '%G';
